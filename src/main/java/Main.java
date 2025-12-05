@@ -22,7 +22,7 @@ public class Main {
                 case ""-> {break;}
                 case "echo" -> {
                     String secondPart = command.replaceFirst("echo ", "");
-                    System.out.println(String.join(" ", newCommand.readQuotes(secondPart)));
+                    System.out.println(String.join(" ", newCommand.readQuotesForEcho(secondPart)));
                     break;
                 }
                 case "type" -> {
@@ -34,7 +34,7 @@ public class Main {
                     try{
                         String secondPart = command.replaceFirst("cat ", "");
                         List<String> contents = new ArrayList<>(List.of("cat"));
-                        contents.addAll(newCommand.readQuotes(secondPart));
+                        contents.addAll(newCommand.readQuotesForCat(secondPart));
                         StringBuilder builder = new StringBuilder();
                         ProcessBuilder pBuilder = new ProcessBuilder(contents);
                         Process process = pBuilder.start();

@@ -53,7 +53,7 @@ public class Command {
             return null;
         }
     }
-    char previous = '2';
+
     int checkExecutability(String command){
         if(shellCommands.contains(command)) return 1;
         for (String pathCommand : pathCommands) {
@@ -77,10 +77,11 @@ public class Command {
             System.out.println(command +": command not found");
         }
     }
-    List<String> readQuotes(String input){
+    List<String> readQuotesForEcho(String input){
         boolean singleQuoteIsOpen = false;
         boolean doubleQuoteIsOpen = false;
         boolean isOpen = false;
+        char previous = '2';
         List<String> args = new ArrayList<>();
         String content = "";
         for(char ch : input.toCharArray()){
@@ -92,7 +93,7 @@ public class Command {
                 doubleQuoteIsOpen = !doubleQuoteIsOpen;
                 isOpen = doubleQuoteIsOpen;
             }
-            else if(ch == '\'' && !doubleQuoteIsOpen && previous!= '\\'){
+            else if(ch == '\'' && !doubleQuoteIsOpen){
                 singleQuoteIsOpen = !singleQuoteIsOpen;
                 isOpen = singleQuoteIsOpen;
             }
@@ -104,6 +105,34 @@ public class Command {
                 content+=ch;
             }
             previous = ch;
+        }
+        if(content.length()>0) args.add(content);
+
+        return args;
+    }
+
+    List<String> readQuotesForCat(String input){
+        boolean singleQuoteIsOpen = false;
+        boolean doubleQuoteIsOpen = false;
+        boolean isOpen = false;
+        List<String> args = new ArrayList<>();
+        String content = "";
+        for(char ch : input.toCharArray()){
+            if(ch == '"' && !singleQuoteIsOpen){
+                doubleQuoteIsOpen = !doubleQuoteIsOpen;
+                isOpen = doubleQuoteIsOpen;
+            }
+            else if(ch == '\'' && !doubleQuoteIsOpen){
+                singleQuoteIsOpen = !singleQuoteIsOpen;
+                isOpen = singleQuoteIsOpen;
+            }
+            else if(!isOpen && ch == ' '){
+                if(content.length()>0) args.add(content);
+                content = "";
+            }
+            else{
+                content+=ch;
+            }
         }
         if(content.length()>0) args.add(content);
 
